@@ -43,17 +43,30 @@ h2 {
   width : 80%;
   border: none;
   padding : 15px;
-  box-shadow: 2px 2px 8px 5px red;
+  box-shadow: 2px 2px 3px 2px red;
+}
+.todo-input:focus {
+  outline: none;
+  box-shadow: 2px 2px 8px 6px red;
 }
 .todoListContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .todoListRow{
   display: flex;
   flex-direction: row;
   align-items:center;
+  /* padding : 0;
+  align-items : center; */
+  margin : 0;
+  padding : 0;
+  /* background-color: blue; */
+  justify-content: center;
+  border-bottom:  1px solid grey;
+
+
 }
 .todoText {
   margin-left: 20px;
@@ -61,6 +74,8 @@ h2 {
 }
 .todoText h5 {
   font-size: 24px;
+  /* background-color: yellow; */
+
 }
 .crossButton{
   margin-right: 0;
@@ -73,4 +88,15 @@ h2 {
   border-top : 2px solid grey;
   align-items: center;
   justify-content: space-between;
+}
+.buttonsContainer {
+  display : flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top:  5%;
+}
+.but {
+  padding : 15px;
+  margin-left: 10px;
 }
