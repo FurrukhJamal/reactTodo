@@ -1,5 +1,5 @@
 import "./App.css";
-import {useState} from "react";
+import React, {useState} from "react";
 
 export const Data = [
   {
@@ -21,6 +21,61 @@ export const Data = [
 
 function App(){
   const[todos, setTodos] = useState(Data)
+  const[newtodo, setNewTodo] = useState("")
+  const[selectedTodos, setSelectedTodos] = useState([])
+
+  React.useEffect(()=> {
+    console.log("Selected checkbox ids ARE : ", selectedTodos)
+  }, [selectedTodos])
+
+function handleChange(e){
+  const value =  e.target.value
+  setNewTodo(value)
+}
+
+function handleSubmit(e){
+  if(e.keyCode == 13)
+  {
+    console.log("Submitted")
+    let len = todos.length
+    setTodos([...todos, {id : len + 1, title : e.target.value, completed : false}])
+    console.log("todos are", todos)
+    setNewTodo("")
+  }
+}
+
+  function handleSelect(id, e ){
+    console.log("id selected is :", id)
+    console.log("checked:", e.target.checked)
+    if(e.target.checked && !selectedTodos.includes(id))
+    {
+      setSelectedTodos([...selectedTodos, id])
+    }
+    else if(!e.target.checked && selectedTodos.includes(id))
+    {
+      //item was checked then unchecked
+      let indx = todos.indexOf(id)
+      let selected = [...selectedTodos]
+      selected.splice(indx, 1)
+      setSelectedTodos([...selected])
+    }
+    //console.log("Selected ids are :", selectedTodos)
+  }
+
+
+  function markCompleted(){
+    selectedTodos.forEach(selectedid=>{
+      todos.forEach((todo, index) =>{
+        if(todo.id == selectedid)
+        {
+          setTodos(previous => {
+            previous[index].completed = true
+            return [...previous]
+          })
+        }
+      })
+    })
+  }
 
   return (
     <div className = "appContainer">
@@ -31,6 +86,9 @@ function App(){
               type = "text"
               placeholder = "What do you want to do?"
               className = "todo-input"
+              onChange = {handleChange}
+              onKeyDown = {handleSubmit}
+              value = {newtodo}
               />
           </form>
           <div className = "todoListContainer">
@@ -39,10 +97,10 @@ function App(){
               todos.map(todo=>(
                 <div key = {todo.id}  className = "todoListRow">
                   <div>
-                    <input type = "checkbox"/>
+                    <input onChange = {(e)=>handleSelect(todo.id, e)} type = "checkbox"/>
                   </div>
                   <div className = "todoText">
-                    <h5>{todo.title}</h5>
+                    <h5 style = {todo.completed ? ({textDecoration : "line-through"}) : null}>{todo.title}</h5>
                   </div>
                   <div className = "crossButton">
                     <p style = {{fontSize : 26}}>X</p>
@@ -78,7 +136,7 @@ function App(){
             <div style = {{display: "flex", flexDirection : "row"}}>
               <button className = "but">All</button>
               <button className = "but">Active</button>
-              <button className = "but">Completed</button>
+              <button onClick = {markCompleted} className = "but">Completed</button>
             </div>
             <div>
               <button className = "but">Clear Completed</button>
