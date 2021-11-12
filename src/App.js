@@ -5,17 +5,20 @@ export const Data = [
   {
     id : "1" ,
     title : "Read on react.Read on reactRead on reacRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on reactRead on react" ,
-    completed : false
+    completed : false,
+    selected  : false,
   },
   {
     id : "2" ,
     title : "do your gorcceries" ,
-    completed : true
+    completed : true,
+    selected  : false,
   },
   {
     id : "3" ,
     title : "take shower" ,
-    completed : false
+    completed : false,
+    selected  : false,
   },
 ]
 
@@ -51,13 +54,23 @@ function handleSubmit(e){
   function handleSelect(id, e ){
     console.log("id selected is :", id)
     console.log("checked:", e.target.checked)
+    //set selected all flag in state to false
+
     if(e.target.checked && !selectedTodos.includes(id))
     {
+      let todoscopy = [...todos]
+      todoscopy[id - 1].checked = true
+      setTodos([todoscopy])
       setSelectedTodos([...selectedTodos, id])
     }
     else if(!e.target.checked && selectedTodos.includes(id))
     {
-      //item was checked then unchecked
+      /*item was checked then unchecked*/
+      //changing the checked flag for that todo
+      let todoscopy = [...todos]
+      todoscopy[id - 1].checked = false
+      setTodos([todoscopy])
+
       let indx = todos.indexOf(id)
       let selected = [...selectedTodos]
       selected.splice(indx, 1)
@@ -68,13 +81,13 @@ function handleSubmit(e){
 
 /*checks for all the todos that are chaecked than mark them as completed
 in the todos state variable array*/
-  function markCompleted(){
+  function markCompletedIncompleted(bool){
     selectedTodos.forEach(selectedid=>{
       todos.forEach((todo, index) =>{
         if(todo.id == selectedid)
         {
           setTodos(previous => {
-            previous[index].completed = true
+            previous[index].completed = bool
             return [...previous]
           })
         }
@@ -83,8 +96,21 @@ in the todos state variable array*/
   }
 
   function handleCheckAll(){
-    
+    setAllChecked(true)
+    todos.forEach((todo)=> {
+      setSelectedTodos(previous => {
+        return [...previous, todo.id]
+      })
+    })
   }
+
+  function handleUnCheckAll(){
+    setAllChecked(false)
+    setSelectedTodos([])
+  }
+
+
+
 
   return (
     <div className = "appContainer">
@@ -106,7 +132,7 @@ in the todos state variable array*/
               todos.map(todo=>(
                 <div key = {todo.id}  className = "todoListRow">
                   <div>
-                    <input onChange = {(e)=>handleSelect(todo.id, e)} type = "checkbox" checked = {}/>
+                    <input onChange = {(e)=>handleSelect(todo.id, e)} type = "checkbox"   checked = {todo.checked}/>
                   </div>
                   <div className = "todoText">
                     <h5 style = {todo.completed ? ({textDecoration : "line-through"}) : null}>{todo.title}</h5>
@@ -133,7 +159,15 @@ in the todos state variable array*/
           {/*Check all container*/}
           <div className = "checkallContainer">
             <div>
-              <button>Check All</button>
+              {
+                allChecked ? (
+                  <button onClick = {handleUnCheckAll}>Uncheck All</button>
+                ):
+                (
+                  <button onClick = {handleCheckAll}>Check All</button>
+                )
+              }
+
             </div>
             <div>
               <p>3 imtems remaining</p>
@@ -144,8 +178,8 @@ in the todos state variable array*/
           <div className = "buttonsContainer">
             <div style = {{display: "flex", flexDirection : "row"}}>
               <button className = "but">All</button>
-              <button className = "but">Active</button>
-              <button onClick = {markCompleted} className = "but">Completed</button>
+              <button onClick = {()=>markCompletedIncompleted(false)} className = "but">Active</button>
+              <button onClick = {()=>markCompletedIncompleted(true)} className = "but">Completed</button>
             </div>
             <div>
               <button className = "but">Clear Completed</button>
