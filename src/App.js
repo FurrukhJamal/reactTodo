@@ -60,7 +60,7 @@ function handleSubmit(e){
     {
       let todoscopy = [...todos]
       todoscopy[id - 1].checked = true
-      setTodos([todoscopy])
+      setTodos([...todoscopy])
       setSelectedTodos([...selectedTodos, id])
     }
     else if(!e.target.checked && selectedTodos.includes(id))
@@ -69,12 +69,25 @@ function handleSubmit(e){
       //changing the checked flag for that todo
       let todoscopy = [...todos]
       todoscopy[id - 1].checked = false
-      setTodos([todoscopy])
+      setTodos([...todoscopy])
 
-      let indx = todos.indexOf(id)
+      let indx = todos.filter(a=> a.id==id)
+      console.log("DEBUGG indx: ", indx)
       let selected = [...selectedTodos]
-      selected.splice(indx, 1)
+      // selected.splice(indx[0].id, 1)
+      let result
+      selected.forEach((item, index)=>{
+        console.log("DEBUGG item", item )
+        if(item == id)
+        {
+          result = index
+
+        }
+      })
+      console.log("DEBUG result :", result)
+      selected.splice(result, 1)
       setSelectedTodos([...selected])
+
     }
     //console.log("Selected ids are :", selectedTodos)
   }
@@ -97,7 +110,12 @@ in the todos state variable array*/
 
   function handleCheckAll(){
     setAllChecked(true)
-    todos.forEach((todo)=> {
+    todos.forEach((todo, index)=> {
+
+      let todoscopy = [...todos]
+      todoscopy[index].checked = true
+      setTodos([...todoscopy])
+
       setSelectedTodos(previous => {
         return [...previous, todo.id]
       })
@@ -106,9 +124,44 @@ in the todos state variable array*/
 
   function handleUnCheckAll(){
     setAllChecked(false)
-    setSelectedTodos([])
-  }
 
+    todos.forEach((todo, index)=> {
+
+      let todoscopy = [...todos]
+      todoscopy[index].checked = false
+      setTodos([...todoscopy])
+
+    setSelectedTodos([])
+  })
+}
+
+
+function calculateRemainingTodos(){
+  console.log("DEBUGG Calcution working")
+  let count = 0
+  for(let i = 0; i < todos.length; i++)
+  {
+    if(!todos[i].completed)
+    {
+      count++
+    }
+  }
+  return count
+}
+
+function deleteCompleted(){
+  let Alltodos = [...todos]
+  let result = Alltodos.filter(a=> a.completed == false)
+  setTodos([...result])
+}
+
+
+function deleteTodo(id){
+  console.log("Removed Click")
+  let allTodos = [...todos]
+  allTodos.splice(id - 1, 1)
+  setTodos([...allTodos])
+}
 
 
 
@@ -138,6 +191,7 @@ in the todos state variable array*/
                     <h5 style = {todo.completed ? ({textDecoration : "line-through"}) : null}>{todo.title}</h5>
                   </div>
                   <div className = "crossButton">
+                    <a href = "#" onClick = {()=>deleteTodo(todo.id)}>X</a>
                     <p style = {{fontSize : 26}}>X</p>
                   </div>
                 </div>
@@ -170,7 +224,7 @@ in the todos state variable array*/
 
             </div>
             <div>
-              <p>3 imtems remaining</p>
+              <p>{calculateRemainingTodos()} items remaining</p>
             </div>
           </div>
 
@@ -182,7 +236,7 @@ in the todos state variable array*/
               <button onClick = {()=>markCompletedIncompleted(true)} className = "but">Completed</button>
             </div>
             <div>
-              <button className = "but">Clear Completed</button>
+              <button onClick = {deleteCompleted}className = "but">Clear Completed</button>
             </div>
           </div>
       </div>
