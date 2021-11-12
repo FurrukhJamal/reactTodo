@@ -23,16 +23,19 @@ function App(){
   const[todos, setTodos] = useState(Data)
   const[newtodo, setNewTodo] = useState("")
   const[selectedTodos, setSelectedTodos] = useState([])
+  const[allChecked, setAllChecked] = useState(false)
 
   React.useEffect(()=> {
     console.log("Selected checkbox ids ARE : ", selectedTodos)
   }, [selectedTodos])
+
 
 function handleChange(e){
   const value =  e.target.value
   setNewTodo(value)
 }
 
+/*Submits a todo if an enter key is pressed*/
 function handleSubmit(e){
   if(e.keyCode == 13)
   {
@@ -43,6 +46,7 @@ function handleSubmit(e){
     setNewTodo("")
   }
 }
+
 
   function handleSelect(id, e ){
     console.log("id selected is :", id)
@@ -62,7 +66,8 @@ function handleSubmit(e){
     //console.log("Selected ids are :", selectedTodos)
   }
 
-
+/*checks for all the todos that are chaecked than mark them as completed
+in the todos state variable array*/
   function markCompleted(){
     selectedTodos.forEach(selectedid=>{
       todos.forEach((todo, index) =>{
@@ -75,6 +80,10 @@ function handleSubmit(e){
         }
       })
     })
+  }
+
+  function handleCheckAll(){
+    
   }
 
   return (
@@ -97,7 +106,7 @@ function handleSubmit(e){
               todos.map(todo=>(
                 <div key = {todo.id}  className = "todoListRow">
                   <div>
-                    <input onChange = {(e)=>handleSelect(todo.id, e)} type = "checkbox"/>
+                    <input onChange = {(e)=>handleSelect(todo.id, e)} type = "checkbox" checked = {}/>
                   </div>
                   <div className = "todoText">
                     <h5 style = {todo.completed ? ({textDecoration : "line-through"}) : null}>{todo.title}</h5>
