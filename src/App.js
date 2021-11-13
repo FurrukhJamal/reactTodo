@@ -152,14 +152,27 @@ function calculateRemainingTodos(){
 function deleteCompleted(){
   let Alltodos = [...todos]
   let result = Alltodos.filter(a=> a.completed == false)
+  console.log("DEBUGG result in deletecomplete function:", result)
   setTodos([...result])
 }
 
 
 function deleteTodo(id){
   console.log("Removed Click")
+  console.log("DEBUGG id : ", id )
   let allTodos = [...todos]
-  allTodos.splice(id - 1, 1)
+  let indx
+  indx = allTodos.map((item, index)=> {
+    if(item.id == id)
+    {
+      indx = index
+      console.log("DEBUG indx : ", indx)
+
+    }
+    return [indx]
+  })
+  console.log("DEBUG indx returned from map:", indx)
+  allTodos.splice(indx[0], 1)
   setTodos([...allTodos])
 }
 
