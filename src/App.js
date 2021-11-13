@@ -59,7 +59,14 @@ function handleSubmit(e){
     if(e.target.checked && !selectedTodos.includes(id))
     {
       let todoscopy = [...todos]
-      todoscopy[id - 1].checked = true
+      todoscopy.forEach((item, i) => {
+        if(item.id == id)
+        {
+          todoscopy[i].checked = true
+        }
+      });
+
+      //todoscopy[id - 1].checked = true
       setTodos([...todoscopy])
       setSelectedTodos([...selectedTodos, id])
     }
@@ -68,7 +75,14 @@ function handleSubmit(e){
       /*item was checked then unchecked*/
       //changing the checked flag for that todo
       let todoscopy = [...todos]
-      todoscopy[id - 1].checked = false
+      //todoscopy[id - 1].checked = false
+      todoscopy.forEach((item, i) => {
+        if(item.id == id)
+        {
+          todoscopy[i].checked = false
+        }
+      });
+
       setTodos([...todoscopy])
 
       let indx = todos.filter(a=> a.id==id)
@@ -204,24 +218,17 @@ function deleteTodo(id){
                     <h5 style = {todo.completed ? ({textDecoration : "line-through"}) : null}>{todo.title}</h5>
                   </div>
                   <div className = "crossButton">
-                    <a href = "#" onClick = {()=>deleteTodo(todo.id)}>X</a>
-                    <p style = {{fontSize : 26}}>X</p>
+                    <button
+                      className = "deleteButton"
+                      onClick = {()=>deleteTodo(todo.id)}>
+                        X
+                    </button>
                   </div>
                 </div>
               ))
             }
 
-            <div className = "todoListRow">
-              <div>
-                <input type = "checkbox"/>
-              </div>
-              <div className = "todoText">
-                <h5>DO something usefull</h5>
-              </div>
-              <div className = "crossButton">
-                <p style = {{fontSize : 26}}>X</p>
-              </div>
-            </div>
+
           </div>
           {/*Check all container*/}
           <div className = "checkallContainer">
@@ -237,14 +244,14 @@ function deleteTodo(id){
 
             </div>
             <div>
-              <p>{calculateRemainingTodos()} items remaining</p>
+              <p>{calculateRemainingTodos()} todos remaining</p>
             </div>
           </div>
 
           {/*Buttons Container*/}
           <div className = "buttonsContainer">
             <div style = {{display: "flex", flexDirection : "row"}}>
-              <button className = "but">All</button>
+              
               <button onClick = {()=>markCompletedIncompleted(false)} className = "but">Active</button>
               <button onClick = {()=>markCompletedIncompleted(true)} className = "but">Completed</button>
             </div>
