@@ -162,17 +162,17 @@ function deleteTodo(id){
   console.log("DEBUGG id : ", id )
   let allTodos = [...todos]
   let indx
-  indx = allTodos.map((item, index)=> {
+  allTodos.forEach((item, index)=> {
     if(item.id == id)
     {
       indx = index
       console.log("DEBUG indx : ", indx)
 
     }
-    return [indx]
+
   })
   console.log("DEBUG indx returned from map:", indx)
-  allTodos.splice(indx[0], 1)
+  allTodos.splice(indx, 1)
   setTodos([...allTodos])
 }
 
