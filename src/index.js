@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 // import AppClass from "./AppClass";
 import reportWebVitals from './reportWebVitals';
+import UseEffectTests from "./useEffectTests";
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
     {/*<AppClass/>*/}
+    {/*<UseEffectTests/>*/}
   </React.StrictMode>,
   document.getElementById('root')
 );

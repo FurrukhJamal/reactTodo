@@ -23,14 +23,38 @@ export const Data = [
 ]
 
 function App(){
-  const[todos, setTodos] = useState(Data)
+  const[todos, setTodos] = useState([])
   const[newtodo, setNewTodo] = useState("")
   const[selectedTodos, setSelectedTodos] = useState([])
   const[allChecked, setAllChecked] = useState(false)
 
+  React.useEffect(()=>{
+    let result = localStorage.getItem("mytodos")
+    let data = JSON.parse(result)
+    console.log("data retrieved is:", data)
+    if(data)
+    {
+      console.log("inside if condition of useEffect")
+      setTodos([...data])
+    }
+    else
+    {
+      setTodos([])
+    }
+  }, [])
+
   React.useEffect(()=> {
     console.log("Selected checkbox ids ARE : ", selectedTodos)
   }, [selectedTodos])
+
+  React.useEffect(()=> {
+    console.log("todos in useEffect", todos)
+    localStorage.setItem("mytodos", JSON.stringify(todos))
+    let result = localStorage.getItem("mytodos")
+    let data = JSON.parse(result)
+    console.log("todos after update:", data)
+  }, [todos])
+
 
 
 function handleChange(e){
@@ -45,7 +69,7 @@ function handleSubmit(e){
     console.log("Submitted")
     let len = todos.length
     setTodos([...todos, {id : len + 1, title : e.target.value, completed : false}])
-    console.log("todos are", todos)
+    //console.log("todos are", todos)
     setNewTodo("")
   }
 }
@@ -251,7 +275,13 @@ function deleteTodo(id){
           {/*Buttons Container*/}
           <div className = "buttonsContainer">
             <div style = {{display: "flex", flexDirection : "row"}}>
-              
+              <button onClick = {()=>{
+                console.log("Delete All clicked")
+                setTodos([])
+                window.localStorage.removeItem("mytodos")
+                let test = localStorage.getItem("mytodos")
+                console.log(test)}}
+                 className ="but">Delete All</button>
               <button onClick = {()=>markCompletedIncompleted(false)} className = "but">Active</button>
               <button onClick = {()=>markCompletedIncompleted(true)} className = "but">Completed</button>
             </div>
